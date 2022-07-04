@@ -1,4 +1,6 @@
 import React,{useRef, useState, useEffect} from 'react'
+import { useDispatch } from 'react-redux'
+import {createPost} from '../features/post/postSlice'
 import useDebounce from '../hooks/useDebounce'
 import {options} from '../helper/field'
 import Modal from './Modal'
@@ -12,6 +14,8 @@ const Post = () => {
   const [isCheck, setIsCheck] = useState({typed: false, selected: false})
 
   const debouncedSearch = useDebounce(search, 300)
+  const dispatch = useDispatch()
+
   const modalRef = useRef()
   const openModal = (e) => {
     modalRef.current.openModal()
@@ -23,6 +27,8 @@ const Post = () => {
     setSearch(e.target.value)
   }
   
+
+  
   useEffect(()=>{
     const API_KEY = 'ExfGsEKdFaonSBC4RfH5V3D6K95E5mRV'
     const URL = `https://api.giphy.com/v1/gifs/search?api_key=${API_KEY}&q=${debouncedSearch}&limit=25&offset=0&rating=g&lang=en`
@@ -31,13 +37,13 @@ const Post = () => {
       console.log(data)
       setResult(data)
     }
-   if(debouncedSearch) fetchData() 
+    if(debouncedSearch) fetchData() 
   },[debouncedSearch])
-
+  
   const clearResult= ()=> {
     setResult([])
   }
-
+  
   const imgPathObject = {}
   const listData = []
   for(let idx in result.data){
@@ -46,6 +52,12 @@ const Post = () => {
     listData.push({...imgPathObject})
   }
   // console.table(listData)
+
+  const onSubmit = (e) =>{
+    e.preventDefault()
+    dispatch(createPost({search, selectedGif}))
+
+  }
 
 
   return (
@@ -56,7 +68,7 @@ const Post = () => {
                <img className="avatar-img rounded-circle" src="../user.png" width={20} height={20}alt=""/> 
             </div>
 
-            <form className="w-100">
+            <form className="w-100" onSubmit={onSubmit}>
               {isCheck === false ? null: 
                 <>
                   <textarea className="form-control pe-4 border-0" rows="2" data-autoresize placeholder="Share your thoughts..."></textarea>
