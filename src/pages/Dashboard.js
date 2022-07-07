@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import Post from '../components/Post'
 import PostItem from '../components/PostItem'
-import Spinner from '../components/Spinner'
+import Spinner from '../components/Spinner'     
 import { getPosts, reset } from '../features/post/postSlice'
 
 function Dashboard() {
@@ -11,14 +11,19 @@ function Dashboard() {
   const dispatch = useDispatch()
 
   const { user } = useSelector((state) => state.auth)
-  const { posts, isLoading, isError, message } = useSelector(
-    (state) => state.goals
-  )
+  const posts = useSelector(state=>state.posts || {})
+  console.log(posts)
+  const isLoading = useSelector(state => state.isLoading)
+  const isError = useSelector(state => state.isError)
+  const message = useSelector(state => state.message)
+  // const { posts, isLoading, isError, message } = useSelector(
+  //   (state) => state.posts || {}
+  // )
 
   useEffect(() => {
-    if (isError) {
-      console.log(message)
-    }
+    // if (isError) {
+    //   console.log(message)
+    // }
 
     if (!user) {
       navigate('/login')
@@ -39,12 +44,12 @@ function Dashboard() {
     <>
       <section className='heading'>
         <h1>Welcome {user && user.name}</h1>
-        <p>Goals Dashboard</p>
+        <p>User Dashboard</p>
       </section>
 
       <Post />
 
-      <section className='content'>
+      {/* <section className='content'>
         {posts.length > 0 ? (
           <div className='goals'>
             {posts.map((post) => (
@@ -52,9 +57,9 @@ function Dashboard() {
             ))}
           </div>
         ) : (
-          <h3>You have not set any goals</h3>
+          <h3>You have not set any posts</h3>
         )}
-      </section>
+      </section> */}
     </>
   )
 }

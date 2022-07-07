@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const cors = require('cors');
 const colors = require('colors');
 const dotenv = require('dotenv').config();
 const {errorHandler} = require('./middleware/errorMiddleware');
@@ -13,8 +14,14 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
-app.use('./api/posts', require('./routes/postRoutes'))
-app.use('./api/users', require('./routes/userRoutes'))
+app.use(cors({
+  credentials: true,
+  origin: 'http://localhost:3000'
+}))
+
+
+app.use('/api/posts', require('./routes/postRoutes'))
+app.use('/api/users', require('./routes/userRoutes'))
 
 app.use(errorHandler)
 

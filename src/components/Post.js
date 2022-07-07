@@ -56,7 +56,6 @@ const Post = () => {
   const onSubmit = (e) =>{
     e.preventDefault()
     dispatch(createPost({search, selectedGif}))
-
   }
 
 
